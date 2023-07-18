@@ -58,3 +58,77 @@ Create request issued for: [resume-repository]
 Waiting for operation [projects/back-resume/locations/europe-west9/operations/eb75cd55-5ab7-4748-a10c-b90c22f0ee21] to complete...done.
 Created repository [resume-repository]
 ```
+
+# Nginx Ingress controller
+
+Links: 
+- https://cloud.google.com/community/tutorials/nginx-ingress-gke
+- https://medium.com/bluekiri/deploy-a-nginx-ingress-and-a-certitificate-manager-controller-on-gke-using-helm-3-8e2802b979ec
+
+```shell
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+# "ingress-nginx" has been added to your repositories
+helm repo update
+# Hang tight while we grab the latest from your chart repositories...
+# ...Successfully got an update from the "ingress-nginx" chart repository
+# Update Complete. ⎈Happy Helming!⎈
+```
+
+```sh
+helm install resume-ingress-controller ingress-nginx/ingress-nginx
+```
+
+Output:
+```
+W0718 12:28:42.672527    8490 warnings.go:70] autopilot-default-resources-mutator:Autopilot updated Job default/resume-ingress-controller-ingress-nginx-admission-create: defaulted unspecified resources for containers [create] (see http://g.co/gke/autopilot-defaults)
+W0718 12:28:50.435314    8490 warnings.go:70] autopilot-default-resources-mutator:Autopilot updated Deployment default/resume-ingress-controller-ingress-nginx-controller: defaulted unspecified resources for containers [controller] (see http://g.co/gke/autopilot-defaults)
+W0718 12:28:53.427516    8490 warnings.go:70] autopilot-default-resources-mutator:Autopilot updated Job default/resume-ingress-controller-ingress-nginx-admission-patch: defaulted unspecified resources for containers [patch] (see http://g.co/gke/autopilot-defaults)
+NAME: resume-ingress-controller
+LAST DEPLOYED: Tue Jul 18 12:28:38 2023
+NAMESPACE: default
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+NOTES:
+The ingress-nginx controller has been installed.
+It may take a few minutes for the LoadBalancer IP to be available.
+You can watch the status by running 'kubectl --namespace default get services -o wide -w resume-ingress-controller-ingress-nginx-controller'
+
+An example Ingress that makes use of the controller:
+  apiVersion: networking.k8s.io/v1
+  kind: Ingress
+  metadata:
+    name: example
+    namespace: foo
+  spec:
+    ingressClassName: nginx
+    rules:
+      - host: www.example.com
+        http:
+          paths:
+            - pathType: Prefix
+              backend:
+                service:
+                  name: exampleService
+                  port:
+                    number: 80
+              path: /
+    # This section is only required if TLS is to be enabled for the Ingress
+    tls:
+      - hosts:
+        - www.example.com
+        secretName: example-tls
+
+If TLS is enabled for the Ingress, a Secret containing the certificate and key must also be provided:
+
+  apiVersion: v1
+  kind: Secret
+  metadata:
+    name: example-tls
+    namespace: foo
+  data:
+    tls.crt: <base64 encoded cert>
+    tls.key: <base64 encoded key>
+  type: kubernetes.io/tls
+```
+
