@@ -1,0 +1,29 @@
+# Default values for helm-chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+certificate:
+  # Names
+  nameOverride: "resume-certificate"
+  fullnameOverride: "resume-certificate"
+
+  # Ingress controller info
+  ingress:
+    className: nginx
+
+  # Let's encrypt certificate
+  certificate:
+    issuerName: letsencrypt-production
+    acme:
+      server: https://acme-v02.api.letsencrypt.org/directory
+    email: c.duployez+githubpro@gmail.com
+
+  # Host
+  host: dev.duployez.fr
+
+
+
+
+
+
+
