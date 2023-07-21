@@ -132,3 +132,35 @@ If TLS is enabled for the Ingress, a Secret containing the certificate and key m
   type: kubernetes.io/tls
 ```
 
+# Deploy Kubernetes Dashboard
+
+```sh
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml
+```
+
+Output:
+```
+namespace/kubernetes-dashboard created
+serviceaccount/kubernetes-dashboard created
+service/kubernetes-dashboard created
+secret/kubernetes-dashboard-certs created
+secret/kubernetes-dashboard-csrf created
+secret/kubernetes-dashboard-key-holder created
+configmap/kubernetes-dashboard-settings created
+role.rbac.authorization.k8s.io/kubernetes-dashboard created
+clusterrole.rbac.authorization.k8s.io/kubernetes-dashboard created
+rolebinding.rbac.authorization.k8s.io/kubernetes-dashboard created
+clusterrolebinding.rbac.authorization.k8s.io/kubernetes-dashboard created
+Warning: autopilot-default-resources-mutator:Autopilot updated Deployment kubernetes-dashboard/kubernetes-dashboard: defaulted unspecified resources for containers [kubernetes-dashboard] (see http://g.co/gke/autopilot-defaults)
+deployment.apps/kubernetes-dashboard created
+service/dashboard-metrics-scraper created
+Warning: autopilot-default-resources-mutator:Autopilot updated Deployment kubernetes-dashboard/dashboard-metrics-scraper: defaulted unspecified resources for containers [dashboard-metrics-scraper] (see http://g.co/gke/autopilot-defaults)
+deployment.apps/dashboard-metrics-scraper created
+```
+
+Access at: http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
+
+Retrieve authentication token from:
+```sh
+gcloud config config-helper --format=json | jq -r '.credential.access_token'
+```
